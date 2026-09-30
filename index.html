@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麺Earth｜マイクラ統合版 地球1/2000の国家運営サーバー</title>
+<meta name="description" content="麺Earthは、実際の地球を1/2000で再現したMinecraft統合版（Bedrock）の国家運営サーバー。建国・領土・外交・戦争・経済を楽しめます。スマホ・Windows・Switch・PS・Xboxから参加できます。">
+<link rel="canonical" href="https://ramentarou1126.github.io/">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0a2b41" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#071f30" media="(prefers-color-scheme: dark)">
+
+<!-- アイコン -->
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="application-name" content="麺Earth">
+<meta name="apple-mobile-web-app-title" content="麺Earth">
+
+<!-- SNS・Discord・LINEで共有された時の表示 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="麺Earth">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://ramentarou1126.github.io/">
+<meta property="og:title" content="麺Earth｜地球1/2000の国家運営サーバー">
+<meta property="og:description" content="実際の地球を1/2000で再現したワールドで、国をつくり、領土を広げ、外交と経済で世界を動かす。統合版専用・シーズン4稼働中。">
+<meta property="og:image" content="https://ramentarou1126.github.io/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="「めんあーす！」のロゴ（地球の形をしたラーメンの丼のドット絵）と麺Earthの名前。サーバーアドレス men-earth.xgames.jp : 19132">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@mcmenearth">
+<meta name="twitter:title" content="麺Earth｜地球1/2000の国家運営サーバー">
+<meta name="twitter:description" content="実際の地球を1/2000で再現したワールドで、国をつくり、領土を広げ、外交と経済で世界を動かす。統合版専用・シーズン4稼働中。">
+<meta name="twitter:image" content="https://ramentarou1126.github.io/og-image.png">
+
+<!-- 検索結果にサイト名「麺Earth」とロゴを出すための情報 -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://ramentarou1126.github.io/#website",
+   "url": "https://ramentarou1126.github.io/",
+   "name": "麺Earth",
+   "inLanguage": "ja",
+   "publisher": {
+    "@id": "https://ramentarou1126.github.io/#org"
+   }
+  },
+  {
+   "@type": "Organization",
+   "@id": "https://ramentarou1126.github.io/#org",
+   "name": "麺Earth",
+   "url": "https://ramentarou1126.github.io/",
+   "logo": {
+    "@type": "ImageObject",
+    "url": "https://ramentarou1126.github.io/logo.png",
+    "width": 512,
+    "height": 512
+   },
+   "sameAs": [
+    "https://x.com/mcmenearth",
+    "https://www.youtube.com/@menearth",
+    "https://www.instagram.com/mcmenearth/",
+    "https://discord.gg/3yN3j85PQJ"
+   ]
+  }
+ ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* レイアウト: 大陸をチャンク格子で描いた海色の帯（ヒーロー）→ 左揃えの紙面。コマンドは等幅のチップで統一 */
+:root {
+  --paper: #f4f7f6;
+  --surface: #ffffff;
+  --ink: #14222b;
+  --ink-2: #4b5d67;
+  --rule: #d4dee2;
+  --sea: #0f3a57;
+  --sea-deep: #0a2b41;
+  --sea-line: #1d4d6e;
+  --sea-ink: #e2eef5;
+  --sea-ink-2: #a9c3d3;
+  --land: #7db458;
+  --land-hi: #b6e08f;
+  --noodle: #f1c232;
+  --noodle-ink: #7f5a00;
+  --on-noodle: #2a1f00;
+  --chip: #e8eef0;
+
+  --f-display: "DotGothic16", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --f-body: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --f-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --s-1: 0.8125rem; --s0: 1rem; --s1: 1.1875rem; --s2: 1.5rem; --s3: 2rem; --s4: clamp(3rem, 9vw, 5.5rem);
+  --gutter: clamp(16px, 4vw, 40px);
+  --max: 1120px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b161d; --surface: #10212b; --ink: #e2ebee; --ink-2: #92a6b0; --rule: #203847;
+    --sea: #0c2f47; --sea-deep: #071f30; --sea-line: #174260; --sea-ink: #e2eef5; --sea-ink-2: #9fbbcc;
+    --land: #72a84f; --land-hi: #a8d882; --noodle: #f1c232; --noodle-ink: #f1c232; --on-noodle: #2a1f00; --chip: #172d3a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0b161d; --surface: #10212b; --ink: #e2ebee; --ink-2: #92a6b0; --rule: #203847;
+  --sea: #0c2f47; --sea-deep: #071f30; --sea-line: #174260; --sea-ink: #e2eef5; --sea-ink-2: #9fbbcc;
+  --land: #72a84f; --land-hi: #a8d882; --noodle: #f1c232; --noodle-ink: #f1c232; --on-noodle: #2a1f00; --chip: #172d3a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: var(--s0);
+  line-height: 1.8;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: inherit; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.3; }
+p { margin: 0; }
+code, .mono { font-family: var(--f-mono); }
+:focus-visible { outline: 3px solid var(--noodle); outline-offset: 2px; }
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---------- ナビ ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: var(--sea-deep); color: var(--sea-ink);
+  border-bottom: 1px solid var(--sea-line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 20px; min-height: 52px; }
+.brand { font-family: var(--f-display); font-size: 1.25rem; text-decoration: none; letter-spacing: 0.02em; white-space: nowrap; }
+.nav ul {
+  display: flex; gap: 4px; list-style: none; margin: 0; padding: 0;
+  overflow-x: auto; scrollbar-width: none; min-width: 0;
+}
+.nav ul::-webkit-scrollbar { display: none; }
+.nav li a {
+  display: block; padding: 6px 10px; border-radius: 6px; text-decoration: none;
+  font-size: var(--s-1); color: var(--sea-ink-2); white-space: nowrap;
+}
+.nav li a:hover { color: var(--sea-ink); background: var(--sea-line); }
+
+/* ---------- ヒーロー ---------- */
+.hero { background: var(--sea); color: var(--sea-ink); padding-block: clamp(32px, 6vw, 64px) 0; }
+.hero-top { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: end; }
+.eyebrow { font-size: var(--s-1); letter-spacing: 0.12em; color: var(--sea-ink-2); }
+.hero h1 {
+  font-family: var(--f-display); font-weight: 400; font-size: var(--s4);
+  line-height: 1; letter-spacing: 0.01em; margin-block: 14px 18px;
+}
+.hero h1 .men { color: var(--noodle); }
+.lead { font-size: var(--s1); max-width: 30em; color: var(--sea-ink); }
+.status {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+  font-size: var(--s-1); padding: 4px 12px 4px 10px; border-radius: 999px;
+  background: var(--sea-deep); border: 1px solid var(--sea-line);
+}
+.status .dot { width: 8px; height: 8px; background: var(--land-hi); border-radius: 1px; }
+
+.connect {
+  background: var(--sea-deep); border: 1px solid var(--sea-line); border-radius: 12px;
+  padding: 20px; display: grid; gap: 14px;
+}
+.connect-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.connect-label { font-size: var(--s-1); color: var(--sea-ink-2); letter-spacing: 0.06em; }
+.connect-value { font-family: var(--f-mono); font-size: clamp(1.05rem, 2.6vw, 1.35rem); font-weight: 500; overflow-wrap: anywhere; }
+.copy {
+  font: inherit; font-size: var(--s-1); cursor: pointer; white-space: nowrap;
+  background: transparent; color: var(--sea-ink); border: 1px solid var(--sea-line);
+  border-radius: 8px; padding: 6px 12px; min-height: 36px;
+}
+.copy:hover { background: var(--sea-line); }
+.copy[data-done] { color: var(--land-hi); border-color: var(--land); }
+.connect-note { font-size: var(--s-1); color: var(--sea-ink-2); border-top: 1px solid var(--sea-line); padding-top: 12px; }
+.cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--noodle); color: var(--on-noodle); font-weight: 700; text-decoration: none;
+  border-radius: 10px; padding: 12px 18px; min-height: 48px;
+}
+.cta:hover { filter: brightness(1.06); }
+
+.map-wrap { margin-top: clamp(28px, 5vw, 48px); }
+.map { display: block; width: 100%; height: auto; aspect-ratio: 144 / 57; max-width: 100%; }
+.map-cap {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px;
+  font-size: var(--s-1); color: var(--sea-ink-2); padding-block: 10px 18px;
+}
+.map-cap b { color: var(--sea-ink); font-family: var(--f-mono); font-weight: 500; }
+
+/* ---------- セクション共通 ---------- */
+section.block { padding-block: clamp(48px, 8vw, 88px); border-bottom: 1px solid var(--rule); }
+.sec-head { display: grid; gap: 8px; margin-bottom: clamp(24px, 4vw, 40px); max-width: 44em; }
+.sec-kicker { font-size: var(--s-1); letter-spacing: 0.14em; color: var(--noodle-ink); font-weight: 700; }
+.sec-head h2 { font-family: var(--f-display); font-weight: 400; font-size: var(--s3); }
+.sec-head p { color: var(--ink-2); }
+
+.cmds { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.cmds code, code.cmd {
+  display: inline-block; font-size: 0.8125rem; background: var(--chip); color: var(--ink);
+  border-radius: 5px; padding: 1px 7px; line-height: 1.7; overflow-wrap: anywhere;
+}
+
+/* ---------- 遊べること ---------- */
+.feats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 32px; }
+.feat { display: grid; gap: 10px; align-content: start; border-top: 2px solid var(--ink); padding-top: 16px; }
+.feat h3 { font-size: var(--s1); display: flex; align-items: center; gap: 10px; }
+.feat h3::before { content: ""; width: 12px; height: 12px; background: var(--land); flex: none; box-shadow: 3px 3px 0 var(--land-hi); }
+.feat p { color: var(--ink-2); }
+
+/* ---------- 参加方法・はじめの一歩 ---------- */
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 4vw, 48px); }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: clamp(18px, 3vw, 28px); display: grid; gap: 14px; align-content: start; min-width: 0; }
+.panel h3 { font-size: var(--s1); }
+.panel .who { font-size: var(--s-1); color: var(--ink-2); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: st; }
+.steps li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; counter-increment: st; }
+.steps li::before {
+  content: counter(st); font-family: var(--f-mono); font-size: var(--s-1); font-weight: 500;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--sea); color: var(--sea-ink); border-radius: 4px;
+}
+.steps li > div { display: grid; gap: 4px; padding-top: 2px; }
+.steps .sub { color: var(--ink-2); font-size: 0.9375rem; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; font-size: 0.9375rem; margin-top: 4px; }
+.kv dt { color: var(--ink-2); }
+.kv dd { margin: 0; font-family: var(--f-mono); overflow-wrap: anywhere; }
+.aside { font-size: var(--s-1); color: var(--ink-2); }
+
+.first { margin-top: clamp(40px, 6vw, 64px); }
+.first h3 { font-size: var(--s2); font-family: var(--f-display); font-weight: 400; margin-bottom: 20px; }
+.first .steps { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 24px; }
+.first .steps li { grid-template-columns: 1fr; gap: 10px; }
+
+/* ---------- 歴史 ---------- */
+.tl { overflow-x: auto; padding-bottom: 6px; }
+.tl-inner { min-width: 640px; position: relative; }
+.tl-track { position: relative; height: 64px; border-bottom: 1px solid var(--rule); }
+.tl-seg { position: absolute; top: 12px; height: 26px; border-radius: 3px; background: var(--sea); min-width: 6px; }
+.tl-seg.pre { background: repeating-linear-gradient(135deg, var(--sea-line) 0 4px, transparent 4px 8px); border: 1px solid var(--sea-line); }
+.tl-seg.now { background: var(--land); }
+.tl-seg.now::after { content: ""; position: absolute; right: -9px; top: 4px; border-left: 9px solid var(--land); border-block: 9px solid transparent; }
+.tl-lab { position: absolute; top: 40px; font-family: var(--f-mono); font-size: 0.75rem; font-weight: 500; color: var(--ink); white-space: nowrap; }
+.tl-ticks { position: relative; height: 26px; }
+.tl-tick { position: absolute; top: 0; font-size: 0.6875rem; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; border-left: 1px solid var(--rule); padding-left: 4px; height: 22px; }
+
+.seasons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.season { border: 1px solid var(--rule); border-radius: 10px; padding: 16px; background: var(--surface); display: grid; gap: 8px; align-content: start; }
+.season.current { border-color: var(--land); box-shadow: inset 0 3px 0 var(--land); }
+.season h3 { font-family: var(--f-display); font-weight: 400; font-size: var(--s2); display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.season h3 small { font-family: var(--f-mono); font-size: 0.75rem; color: var(--ink-2); font-weight: 400; }
+.season .date { font-family: var(--f-mono); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.season p { font-size: 0.9375rem; color: var(--ink-2); }
+.tag { justify-self: start; font-size: 0.75rem; padding: 0 8px; border-radius: 4px; background: var(--chip); color: var(--ink); }
+.season.current .tag { background: var(--land); color: #102108; }
+
+.events { list-style: none; margin: clamp(32px, 5vw, 48px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; }
+.events li { display: grid; grid-template-columns: 7.2em minmax(0, 1fr); gap: 12px; padding-block: 10px; border-bottom: 1px dashed var(--rule); font-size: 0.9375rem; }
+.events time { font-family: var(--f-mono); color: var(--ink-2); font-variant-numeric: tabular-nums; font-size: 0.8125rem; padding-top: 2px; }
+
+/* ---------- ルール ---------- */
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.rules li { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 12px; }
+.rules li::before { content: ""; width: 8px; height: 8px; margin-top: 0.7em; background: var(--ink-2); }
+.rules b { font-weight: 700; }
+.ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ladder li { display: grid; grid-template-columns: 1fr; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--rule); background: var(--surface); }
+.ladder li:nth-child(1) { box-shadow: inset 4px 0 0 #c9b24a; }
+.ladder li:nth-child(2) { box-shadow: inset 4px 0 0 #d98e36; }
+.ladder li:nth-child(3) { box-shadow: inset 4px 0 0 #d4623c; }
+.ladder li:nth-child(4) { box-shadow: inset 4px 0 0 #b83a3a; }
+.ladder b { font-size: var(--s0); }
+.ladder span { font-size: var(--s-1); color: var(--ink-2); }
+.warn { margin-top: 14px; font-size: 0.9375rem; padding: 14px; border-radius: 8px; background: var(--chip); }
+
+/* ---------- 運営 ---------- */
+.roles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 0; }
+.roles div { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 4px; align-content: start; }
+.roles dt { font-family: var(--f-mono); font-weight: 500; }
+.roles dd { margin: 0; color: var(--ink-2); font-size: 0.9375rem; }
+.recruit { margin-top: 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 20px; border-radius: 12px; background: var(--sea); color: var(--sea-ink); }
+.recruit p { max-width: 40em; }
+.recruit .sub { color: var(--sea-ink-2); font-size: var(--s-1); }
+
+/* ---------- 動画リンク ---------- */
+.video {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 12px;
+  text-decoration: none; color: var(--ink); background: var(--chip);
+  border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px;
+}
+.video:hover { border-color: var(--ink-2); }
+.video .play { width: 44px; height: 32px; border-radius: 8px; background: #d93025; position: relative; }
+.video .play::after { content: ""; position: absolute; left: 17px; top: 9px; border-left: 12px solid #fff; border-block: 7px solid transparent; }
+.video > span:last-child { display: grid; }
+.panel > .sub { color: var(--ink-2); font-size: 0.9375rem; }
+.connect-note a, .sec-head p a { color: inherit; text-underline-offset: 3px; }
+
+/* ---------- 関連サイト ---------- */
+.sites { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.sites a {
+  display: grid; gap: 2px; height: 100%; text-decoration: none; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px;
+  position: relative;
+}
+.sites a::after { content: "↗"; position: absolute; right: 16px; top: 14px; color: var(--ink-2); }
+.sites a:hover { border-color: var(--ink-2); }
+.sites a:hover::after { color: var(--noodle-ink); }
+.sites b { font-size: var(--s1); padding-right: 24px; }
+.sites .path { font-family: var(--f-mono); font-size: var(--s-1); color: var(--noodle-ink); }
+.sites .desc { font-size: 0.9375rem; color: var(--ink-2); margin-top: 4px; }
+
+.sns { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.sns-label { font-size: var(--s-1); letter-spacing: 0.14em; color: var(--noodle-ink); font-weight: 700; }
+.sns-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.sns-list a {
+  display: inline-flex; align-items: baseline; gap: 8px; text-decoration: none; color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px; background: var(--surface);
+}
+.sns-list a:hover { border-color: var(--ink-2); }
+.sns-list span { font-family: var(--f-mono); font-size: var(--s-1); color: var(--ink-2); }
+
+/* ---------- フッター ---------- */
+footer { padding-block: 40px calc(40px + env(safe-area-inset-bottom, 0px)); color: var(--ink-2); font-size: var(--s-1); }
+footer .wrap { display: grid; gap: 18px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
+.links a { text-decoration: none; border: 1px solid var(--rule); border-radius: 8px; padding: 8px 14px; color: var(--ink); background: var(--surface); }
+.links a:hover { border-color: var(--ink-2); }
+.fine { max-width: 60em; }
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 900px) {
+  .feats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .seasons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .events { grid-template-columns: minmax(0, 1fr); }
+  .sites { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .hero-top, .two { grid-template-columns: minmax(0, 1fr); }
+  .brand { font-size: 1.1rem; }
+}
+@media (max-width: 520px) {
+  .feats, .seasons, .roles, .sites { grid-template-columns: minmax(0, 1fr); }
+  .events li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="ページ内">
+  <div class="wrap">
+    <a class="brand" href="#top">麺Earth</a>
+    <ul>
+      <li><a href="#play">遊べること</a></li>
+      <li><a href="#join">参加方法</a></li>
+      <li><a href="#history">歴史</a></li>
+      <li><a href="#rules">ルール</a></li>
+      <li><a href="#team">運営</a></li>
+      <li><a href="#sites">関連サイト</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <p class="eyebrow">MINECRAFT 統合版 ／ 国家運営サーバー</p>
+        <h1><span class="men">麺</span>Earth</h1>
+        <p class="lead">実際の地球を1/2000で再現したワールドで、国をつくり、領土を広げ、外交と経済で世界を動かす。</p>
+        <p class="status"><span class="dot" aria-hidden="true"></span>シーズン4 稼働中 ・ 2026/08/28〜</p>
+      </div>
+      <div class="connect" aria-label="接続情報">
+        <div class="connect-row">
+          <div>
+            <div class="connect-label">サーバーアドレス</div>
+            <div class="connect-value" id="addr">men-earth.xgames.jp</div>
+          </div>
+          <button class="copy" type="button" id="copy-addr" data-copy="men-earth.xgames.jp" data-target="addr">コピー</button>
+        </div>
+        <div class="connect-row">
+          <div>
+            <div class="connect-label">ポート</div>
+            <div class="connect-value" id="port">19132</div>
+          </div>
+          <button class="copy" type="button" id="copy-port" data-copy="19132" data-target="port">コピー</button>
+        </div>
+        <a class="cta" href="https://discord.gg/3yN3j85PQJ" target="_blank" rel="noopener">Discordに参加する</a>
+        <p class="connect-note">統合版（Windows・スマホ・Switch・PS・Xbox）専用です。Java版からは参加できません。</p>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <canvas class="map" id="map" width="1440" height="570" role="img" aria-label="ブロックで描いた世界地図"></canvas>
+      <div class="map-cap">
+        <span>縮尺 <b>1:2000</b> ／ 1ブロック ≒ 現実の2km</span>
+        <span>シーズン1・2は <b>1:4000</b></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="block" id="play">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">遊べること</p>
+        <h2>国家運営から、毎日の暮らしまで</h2>
+        <p>コマンドは <code class="cmd">/menearth:</code> または <code class="cmd">/earth:</code> で始まります。主なコマンドの一覧は、ゲーム内の <code class="cmd">/menearth:help</code> で見られます。</p>
+      </div>
+      <div class="feats">
+        <article class="feat">
+          <h3>国をつくる</h3>
+          <p>建国すると、いま立っているチャンクが最初の領土になります。国民を招待し、税金・国庫・国民ごとの権限を国王が決めます。平和国か非平和国かも選べます。</p>
+          <ul class="cmds"><li><code>/menearth:create</code></li><li><code>/menearth:cm</code></li><li><code>/menearth:invitacountry</code></li></ul>
+        </article>
+        <article class="feat">
+          <h3>領土を広げる</h3>
+          <p>領土は16×16ブロックのチャンク単位です。建築・破壊・ドア・チェスト・PvPなどの権限を、個人・国民・他国ごとに細かく設定できます。チャンクの売買やオークションもあります。</p>
+          <ul class="cmds"><li><code>/menearth:claim</code></li><li><code>/menearth:chunkui</code></li><li><code>/menearth:chunkarea</code></li></ul>
+        </article>
+        <article class="feat">
+          <h3>外交と戦争</h3>
+          <p>同盟・友好・自治領・連邦などの関係を結べます。戦争では攻め込んだ領土に「戦争コア」が現れ、制限時間内に壊せばそのチャンクを奪えます。国どうしの合併もできます。</p>
+          <ul class="cmds"><li><code>/menearth:war</code></li><li><code>/menearth:listcountry</code></li></ul>
+        </article>
+        <article class="feat">
+          <h3>働いて稼ぐ</h3>
+          <p>木こり・鉱石士・狩人・農業・土堀り士・砂堀り士・ネザー職人・建築士の8職業。作業でお金と経験値が入り、上限レベルに届くと転生できます。毎日のログインボーナスもあります。</p>
+          <ul class="cmds"><li><code>/menearth:work</code></li><li><code>/menearth:money</code></li><li><code>/menearth:rank</code></li></ul>
+        </article>
+        <article class="feat">
+          <h3>会社・株・銀行</h3>
+          <p>会社を設立して社員を雇い、給料やショップを運営できます。上場すれば株式市場で売買され、株主には配当が出ます。仲間とお金を管理する銀行（共同口座）も作れます。</p>
+          <ul class="cmds"><li><code>/menearth:createcompany</code></li><li><code>/menearth:stock</code></li><li><code>/menearth:createbank</code></li></ul>
+        </article>
+        <article class="feat">
+          <h3>暮らしとつながり</h3>
+          <p>ホーム・国ホーム・TPAでの移動、結婚、ゲーム内SNS「Internet」、二つ名。Discordと連携すると、プロフィール確認や国のロール付与、全体チャットの表示ができます。資源サーバーとの行き来もできます。</p>
+          <ul class="cmds"><li><code>/menearth:internet</code></li><li><code>/menearth:discord</code></li><li><code>/menearth:transfer</code></li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="join">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">参加方法</p>
+        <h2>サーバーに入る</h2>
+        <p>使っている機種によって手順が変わります。</p>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <div>
+            <h3>スマホ・PC</h3>
+            <p class="who">iPhone・Android・Windows</p>
+          </div>
+          <ol class="steps">
+            <li><div><b>マイクラを開いて「遊ぶ」→「サーバー」タブへ</b></div></li>
+            <li><div><b>「サーバーを追加」を押す</b></div></li>
+            <li><div>
+              <b>下のとおり入力して保存し、参加する</b>
+              <dl class="kv">
+                <dt>名前</dt><dd>麺Earth（自由）</dd>
+                <dt>アドレス</dt><dd>men-earth.xgames.jp</dd>
+                <dt>ポート</dt><dd>19132</dd>
+              </dl>
+            </div></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div>
+            <h3>家庭用ゲーム機</h3>
+            <p class="who">Nintendo Switch・PlayStation・Xbox</p>
+          </div>
+          <a class="video" href="https://youtu.be/P5biIxt2qnw" target="_blank" rel="noopener">
+            <span class="play" aria-hidden="true"></span>
+            <span><b>参加方法の動画を見る</b><span class="sub">YouTube ・ 詳しい手順はこちら</span></span>
+          </a>
+          <p class="sub">ゲーム機は外部サーバーを直接追加できないため、スマホ・PCとは手順が違います。上の動画の手順どおりに進めてください。</p>
+          <dl class="kv">
+            <dt>アドレス</dt><dd>men-earth.xgames.jp</dd>
+            <dt>ポート</dt><dd>19132</dd>
+          </dl>
+          <p class="aside">うまくいかない時は、Discordで質問してください。</p>
+        </div>
+      </div>
+
+      <div class="first">
+        <h3>はじめの一歩</h3>
+        <ol class="steps">
+          <li><div><b>わからないことは聞く</b><span class="sub">コマンド一覧は <code class="cmd">/menearth:help</code>。遊び方は <code class="cmd">/menearth:ai</code> のAIアシスタントに質問できます。</span></div></li>
+          <li><div><b>Discordと連携する</b><span class="sub">Discordで <code class="cmd">/renkei</code> を実行し、出てきた番号をゲーム内の <code class="cmd">/menearth:discord</code> に入力します。</span></div></li>
+          <li><div><b>職業に就いて稼ぐ</b><span class="sub"><code class="cmd">/menearth:work</code> で職業を選びます。ログインボーナスも毎日もらえます。</span></div></li>
+          <li><div><b>国に入る・国をつくる</b><span class="sub">招待を受けて <code class="cmd">/menearth:joincountry</code>、または <code class="cmd">/menearth:create</code> で建国します。</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="history">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">歴史</p>
+        <h2>4つのシーズン</h2>
+        <p>シーズンが変わるとワールドは初期化され、建築物やアイテムはすべて消えます。下の帯は実際の期間の長さに合わせて描いています。</p>
+      </div>
+
+      <div class="tl" aria-hidden="true">
+        <div class="tl-inner">
+          <div class="tl-track" id="tl-track"></div>
+          <div class="tl-ticks" id="tl-ticks"></div>
+        </div>
+      </div>
+
+      <div class="seasons">
+        <article class="season">
+          <h3>S1 <small>1:4000</small></h3>
+          <p class="date">2025/10/04 – 10/07</p>
+          <span class="tag">国アドオン: Makecountry</span>
+          <p>ネガティブキャンペーンが原因で、4日間で終了。</p>
+        </article>
+        <article class="season">
+          <h3>S2 <small>1:4000</small></h3>
+          <p class="date">2025/12/19 – 2026/05/01</p>
+          <span class="tag">国アドオン: Makecountry</span>
+          <p>Minecraft Realmsで始まり、一時中断ののち2026/2/14から本格稼働。プレイヤーアンケートで終了が決まりました。</p>
+        </article>
+        <article class="season">
+          <h3>S3 <small>1:2000</small></h3>
+          <p class="date">2026/05/02 – 08/25</p>
+          <span class="tag">国アドオン: Makecountry</span>
+          <p>縮尺を1:2000に拡大。国アドオンの大きな更新のため終了。</p>
+        </article>
+        <article class="season current">
+          <h3>S4 <small>1:2000</small></h3>
+          <p class="date">2026/08/28 –</p>
+          <span class="tag">稼働中 ・ 国アドオン: 麺Creator</span>
+          <p>運営自作の「麺Creator」に移行。開始日に同時接続人数の最多記録を更新しました。</p>
+        </article>
+      </div>
+
+      <ol class="events">
+        <li><time datetime="2026-02-12">2026/02/12</time><span>公式YouTubeチャンネルを開設</span></li>
+        <li><time datetime="2026-03-20">2026/03/20</time><span>期間限定のPvPエリアイベント（〜3/22）</span></li>
+        <li><time datetime="2026-04-01">2026/04/01</time><span>エイプリルフール企画「蕎麦Earth」</span></li>
+        <li><time datetime="2026-06-02">2026/06/02</time><span>写真コンテスト「麺Earthカメラマンイベント」</span></li>
+        <li><time datetime="2026-06-27">2026/06/27</time><span>PvPトーナメント大会</span></li>
+        <li><time datetime="2026-07-03">2026/07/03</time><span>資源サーバーを追加</span></li>
+        <li><time datetime="2026-07-27">2026/07/27</time><span>コミュニティ掲示板サイト「麺Community」を公開</span></li>
+        <li><time datetime="2026-08-11">2026/08/11</time><span>ログインボーナスを追加</span></li>
+        <li><time datetime="2026-08-28">2026/08/28</time><span>シーズン4開始・同時接続の最多記録を更新</span></li>
+        <li><time datetime="2026-08-29">2026/08/29</time><span>利用規約サイトを公開（それ以前はドキュメントで公開）</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="rules">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">ルール</p>
+        <h2>守ってほしいこと</h2>
+        <p>主なルールの要約です。サーバーやDiscordに参加した時点で、利用規約に同意したものとみなされます。正式な内容は<a href="https://ramentarou1126.github.io/terms" target="_blank" rel="noopener">利用規約</a>をご確認ください。</p>
+      </div>
+      <div class="two">
+        <ul class="rules">
+          <li><span><b>暴言・差別・過度な下ネタ・スパム</b>は禁止です。</span></li>
+          <li><span><b>大規模な地形改変</b>（幅20m以上の露天掘りや埋め立てなど）は禁止です。</span></li>
+          <li><span>過剰なレッドストーン装置・チャンクローダー・TNT兵器など、<b>サーバーを重くするもの</b>は禁止です。</span></li>
+          <li><span><b>バグ・デュープの悪用</b>は禁止です。見つけたらDiscordのチケットで報告してください。</span></li>
+          <li><span><b>チート・X線テクスチャ・マクロ・AFK回避ツール</b>は禁止です。資源サーバーでの放置自体はOKです。</span></li>
+          <li><span>他国の領土での破壊・窃盗、国境から3チャンク以内での<b>嫌がらせ</b>は禁止です。</span></li>
+          <li><span><b>PK</b>は相手の同意があれば可能です。</span></li>
+          <li><span>他国を<b>囲むような領土の取り方</b>や、海岸から10チャンク以上離れた海での領土取得は禁止です。</span></li>
+        </ul>
+        <div>
+          <ol class="ladder" aria-label="処罰の流れ">
+            <li><b>警告</b></li>
+            <li><b>ミュート</b><span>チャットが送れなくなります</span></li>
+            <li><b>期限BAN</b><span>決められた期間、サーバーに入れなくなります</span></li>
+            <li><b>永久BAN</b></li>
+          </ol>
+          <p class="warn">処罰は原則この順で重くなりますが、悪質な場合は段階を飛ばします。チートの使用、DDoS攻撃、BAN回避のための別アカウントやVPN、他人のアカウントへの不正アクセスは即時永久BANです。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="team">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">運営</p>
+        <h2>運営チーム</h2>
+        <p>鯖主は <span class="mono">Ra_mentarou1126</span> です。4つの部門で運営しています。</p>
+      </div>
+      <dl class="roles">
+        <div><dt>Admin</dt><dd>開発部門。アドオンの開発を担当し、Staffも兼ねます。</dd></div>
+        <div><dt>Staff</dt><dd>認証ロールの付与、規約違反への対処、プレイヤー対応。</dd></div>
+        <div><dt>PR Staff</dt><dd>広報。動画編集やSNSの運用。</dd></div>
+        <div><dt>Eventer</dt><dd>サーバー内イベントの企画。</dd></div>
+      </dl>
+      <div class="recruit">
+        <div>
+          <p><b>運営スタッフを募集しています</b></p>
+          <p class="sub">応募はDiscordでチケットを作成してください。</p>
+        </div>
+        <a class="cta" href="https://discord.gg/3yN3j85PQJ" target="_blank" rel="noopener">Discordへ</a>
+      </div>
+    </div>
+  </section>
+  <section class="block" id="sites">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-kicker">関連サイト</p>
+        <h2>ゲームの外でも見られること</h2>
+      </div>
+      <ul class="sites">
+        <li><a href="https://ramentarou1126.github.io/map" target="_blank" rel="noopener"><b>マップ</b><span class="path">/map</span><span class="desc">プレイヤーの現在地・国境・ワールドの地図。</span></a></li>
+        <li><a href="https://ramentarou1126.github.io/land" target="_blank" rel="noopener"><b>主張領土</b><span class="path">/land</span><span class="desc">各国が主張している領土の地図。</span></a></li>
+        <li><a href="https://ramentarou1126.github.io/graph" target="_blank" rel="noopener"><b>プレイヤーのグラフ</b><span class="path">/graph</span><span class="desc">プレイヤー数の移り変わりをグラフで見られます。</span></a></li>
+        <li><a href="https://ramentarou1126.github.io/community/" target="_blank" rel="noopener"><b>麺Community</b><span class="path">/community</span><span class="desc">掲示板とレビュー。投稿にはDiscordログインが必要です。</span></a></li>
+        <li><a href="https://ramentarou1126.github.io/terms" target="_blank" rel="noopener"><b>利用規約</b><span class="path">/terms</span><span class="desc">サーバーとコミュニティのルールの正式な条文。</span></a></li>
+        <li><a href="https://youtu.be/P5biIxt2qnw" target="_blank" rel="noopener"><b>参加方法の動画</b><span class="path">YouTube</span><span class="desc">家庭用ゲーム機からの参加手順を説明しています。</span></a></li>
+      </ul>
+      <div class="sns">
+        <p class="sns-label">公式SNS</p>
+        <ul class="sns-list">
+          <li><a href="https://x.com/mcmenearth" target="_blank" rel="noopener"><b>X</b><span>@mcmenearth</span></a></li>
+          <li><a href="https://www.youtube.com/@menearth" target="_blank" rel="noopener"><b>YouTube</b><span>@menearth</span></a></li>
+          <li><a href="https://www.instagram.com/mcmenearth/" target="_blank" rel="noopener"><b>Instagram</b><span>@mcmenearth</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://discord.gg/3yN3j85PQJ" target="_blank" rel="noopener">Discord</a>
+      <a href="https://ramentarou1126.github.io/map" target="_blank" rel="noopener">マップ</a>
+      <a href="https://ramentarou1126.github.io/land" target="_blank" rel="noopener">主張領土</a>
+      <a href="https://ramentarou1126.github.io/graph" target="_blank" rel="noopener">プレイヤーのグラフ</a>
+      <a href="https://ramentarou1126.github.io/community/" target="_blank" rel="noopener">麺Community</a>
+      <a href="https://ramentarou1126.github.io/terms" target="_blank" rel="noopener">利用規約</a>
+      <a href="https://youtu.be/P5biIxt2qnw" target="_blank" rel="noopener">参加方法の動画</a>
+      <a href="https://x.com/mcmenearth" target="_blank" rel="noopener">X</a>
+      <a href="https://www.youtube.com/@menearth" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/mcmenearth/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <p class="fine">麺Earthは非公式のMinecraftサーバーです。Mojang Studios・Microsoftとは関係ありません。NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</p>
+    <p>© 麺Earth</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // ---------- コピー ----------
+  document.querySelectorAll(".copy").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const text = btn.dataset.copy;
+      const done = (label) => {
+        btn.textContent = label; btn.setAttribute("data-done", "");
+        setTimeout(() => { btn.textContent = "コピー"; btn.removeAttribute("data-done"); }, 1800);
+      };
+      const selectIt = () => {
+        const el = document.getElementById(btn.dataset.target);
+        const r = document.createRange(); r.selectNodeContents(el);
+        const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        done("選択しました");
+      };
+      try {
+        const p = navigator.clipboard && navigator.clipboard.writeText(text);
+        if (p && p.then) p.then(() => done("コピーしました"), selectIt); else selectIt();
+      } catch (e) { selectIt(); }
+    });
+  });
+
+  // ---------- ブロックの世界地図 ----------
+  const COLS = 144, ROWS = 57;
+  const B64 = "AAAAAAH+B/4AAAAAAAAAAAAAAAAAAD/3//+AAUAAAAcAAAAAAAAAEE+f//8AAgAAAADAAAAAAAAAaZwA//8AAAADgB/4AYAAAAAD/a+AP/4AAAAGCP//4MAAAfgKfmf4P/4AAHAAH/////8Aw/////48H+AAA/8f+///////Z/////5+HwHAD/3/////////A////+AIDgAAPn/////////+A/v//8BwAgAAPn////////z4AGA//+B+AAACFn///////wGAAAAf//5/AAADEP///////gOAAAAP//7/wAALv////////4MAAAAH////QAAB/////////0AAAAAD///84AAD/////////wAAAAAD////AAAB//Xv/////gAAAAAD///wAAAPzeDn////+MAAAAAD///gAAAPEv/3////8IAAAAAB///AAAAPBN/3////MYAAAAAA///AAAAH8AP/////FwAAAAAAf/8AAAAP/IP/////iAAAAAAAH/8AAAAP////////gAAAAAAAP4EAAAAf//v3////AAAAAAAAF4AAAAA///36////AAAAAAAAB4AAAAB/////H//+AAAAAAAAA4hAAAB///7+B+fgAAAAAAAAAfgAAAB///58B4PggAAAAAAAAB4AAAB///94BwHwgAAAAAAAAAYAAAB////AAwHwAAAAAAAAAAI+AAA////wAwAgQAAAAAAAAAF/AAAf///wAIAAYAAAAAAAAAB/4AAPP//gAAKCAAAAAAAAAAB/8AAAD//gAAHGAAAAAAAAAAD/8AAAD/+AAACOAAAAAAAAAAD//gAAD/8AAADOhQAAAAAAAAH//4AAB/8AAABAA8AAAAAAAAD//8AAB/8AAAAYAeAAAAAAAAD//8AAB/8AAAAAABAAAAAAAAB//4AAB/8AAAAADgAAAAAAAAA//wAAB/8QAAAAPkAAAAAAAAAf/wAAB/8wAAAAf8AAAAAAAAAP/wAAB/wwAAAA/+AAAAAAAAAP/gAAB/xgAAAD//AAAAAAAAAP+AAAA/wgAAAH//gAAAAAAAAP+AAAA/gAAAAH//gAAAAAAAAf8AAAAfgAAAAD//gAAAAAAAAf4AAAAfAAAAAD5/gAAAAAAAAfwAAAAAAAAAADAfAAAAAAAAAfgAAAAAAAAAAAAPACAAAAAAA+AAAAAAAAAAAAAAACAAAAAAA8AAAAAAAAAAAAACAMAAAAAAA8AAAAAAAAAAAAAAAYAAAAAAA8AAAAAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+  const bytes = Uint8Array.from(atob(B64), (c) => c.charCodeAt(0));
+  const isLand = (r, c) => {
+    const i = r * COLS + c;
+    return (bytes[i >> 3] >> (7 - (i & 7))) & 1;
+  };
+  const canvas = document.getElementById("map");
+  const ctx = canvas.getContext("2d");
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let sweep = -20, colors;
+
+  function size() {
+    const w = Math.max(320, Math.round(canvas.clientWidth || canvas.parentElement.clientWidth));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(w * ROWS / COLS * dpr);
+    colors = { land: css("--land"), hi: css("--land-hi"), grid: css("--sea-line") };
+  }
+  function draw() {
+    const cw = canvas.width / COLS, ch = canvas.height / ROWS;
+    const gap = Math.max(1, Math.round(cw * 0.12));
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const x = Math.floor(c * cw), y = Math.floor(r * ch);
+        const w = Math.floor((c + 1) * cw) - x - gap, h = Math.floor((r + 1) * ch) - y - gap;
+        if (isLand(r, c)) {
+          const d = Math.abs(c - sweep);
+          ctx.fillStyle = d < 3 ? colors.hi : colors.land;
+          ctx.fillRect(x, y, w, h);
+        } else if ((r + c) % 2 === 0) {
+          ctx.fillStyle = colors.grid;
+          const s = Math.max(1, Math.round(cw * 0.14));
+          ctx.fillRect(x + Math.round(w / 2 - s / 2), y + Math.round(h / 2 - s / 2), s, s);
+        }
+      }
+    }
+  }
+  let last = 0;
+  function tick(t) {
+    if (!reduce.matches && document.visibilityState === "visible" && t - last > 60) {
+      last = t;
+      sweep += 0.6;
+      if (sweep > COLS + 20) sweep = -20;
+      draw();
+    }
+    requestAnimationFrame(tick);
+  }
+  size(); draw();
+  requestAnimationFrame(tick);
+  let rt;
+  window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { size(); draw(); }, 120); });
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const recolor = () => { size(); draw(); };
+  if (mq.addEventListener) mq.addEventListener("change", recolor);
+  new MutationObserver(recolor).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // ---------- シーズンの帯（期間の長さどおり） ----------
+  const D = (s) => { const [y, m, d] = s.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+  const now = Date.now();
+  const start = D("2025-10-01");
+  const end = Math.max(D("2026-10-15"), now + 15 * 864e5);
+  const pct = (t) => ((t - start) / (end - start)) * 100;
+  const segs = [
+    { lab: "S1", from: "2025-10-04", to: "2025-10-08" },
+    { lab: "", from: "2025-12-19", to: "2026-02-14", cls: "pre" },
+    { lab: "S2", from: "2026-02-14", to: "2026-05-01" },
+    { lab: "S3", from: "2026-05-02", to: "2026-08-25" },
+    { lab: "S4", from: "2026-08-28", to: null, cls: "now" },
+  ];
+  const track = document.getElementById("tl-track");
+  for (const s of segs) {
+    const a = D(s.from), b = s.to ? D(s.to) : now;
+    const el = document.createElement("div");
+    el.className = "tl-seg" + (s.cls ? " " + s.cls : "");
+    el.style.left = pct(a) + "%";
+    el.style.width = (pct(b) - pct(a)) + "%";
+    track.appendChild(el);
+    if (s.lab) {
+      const l = document.createElement("div");
+      l.className = "tl-lab"; l.textContent = s.lab;
+      l.style.left = pct(a) + "%";
+      track.appendChild(l);
+    }
+  }
+  const pre = document.createElement("div");
+  pre.className = "tl-lab"; pre.style.left = pct(D("2025-12-19")) + "%";
+  pre.style.fontWeight = "400"; pre.style.color = "var(--ink-2)"; pre.textContent = "Realms期";
+  track.appendChild(pre);
+  const ticks = document.getElementById("tl-ticks");
+  const d0 = new Date(start);
+  for (let y = d0.getUTCFullYear(), m = d0.getUTCMonth(); Date.UTC(y, m, 1) <= end; m++) {
+    if (m > 11) { m = 0; y++; }
+    const t = Date.UTC(y, m, 1);
+    if (t > end) break;
+    const el = document.createElement("div");
+    el.className = "tl-tick";
+    el.style.left = pct(t) + "%";
+    el.textContent = m === 0 || t === start ? `${y}/${m + 1}` : `${m + 1}月`;
+    ticks.appendChild(el);
+  }
+})();
+</script>
+</body>
+</html>
